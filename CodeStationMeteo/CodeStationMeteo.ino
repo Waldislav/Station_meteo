@@ -5,20 +5,25 @@ DHT dht(10, DHT11);
 const int res=4, en=5, d4=6, d5=7, d6=8, d7=9;
 LiquidCrystal lcd(res, en, d4, d5, d6, d7);
 #define pluv A0
-//#define pluv 2
+//#define pluv 2      //Si on avait un vrai pluviomètre
 #define anemo A1
-//#define anemo 3
+//#define anemo 3     //Si on avait un vrai anémomètre
 #define girouette A2
 #define buzzer 11
 #define suivant 13
 #define immobile 12
 
+/* Pour le vrai anémomètre et pluviomètre :
+
+int nbTourAnemo,nbPluv;   //compte le nombre de tour de l'anémomètre et de bascule du pluviomètre
+int tempsMesure=0;        //Permet de faire une mesure de l'anémomètre et du pluvimètre sur 5 secondes
+const float Pi=3.14159;
+const float RBras;        //Rayon des bras de l'anémomètre
+const float valBascule=0.2794;  //combien de mm de pluie sont tombés avec une bascule
+
+*/
+
 int etat;   //détermine quelle information afficher sur l'écran
-//int nbTourAnemo,nbPluv;   //compte le nombre de tour de l'anémomètre et de bascule du pluviomètre
-//int tempsMesure=0;        //Permet de faire une mesure de l'anémomètre et du pluvimètre sur 5 secondes
-//const float Pi=3.14159;
-//const float RBras;        //Rayon des bras de l'anémomètre
-//const float valBascule=0.2794;  //combien de mm de pluie sont tombés avec une bascule
 int t,h;                  //Variables qui prennent la valeur de la température et de l'humidité 
 int temps1,temps2;          //Pour déterminer le nombre de seconde passé entre deux actions
 float pluie,vent,degvent;
@@ -48,10 +53,10 @@ void setup() {
 void loop() {
   lcd.clear();
   temps1=millis();
-  agir();         //Appel de la méthode qui affiche les informations sur l'écran
   verifieBout();  //Méthode qui nous permet de vérifier si on a fait un appuie sur un bouton et de simuler un delay de 2500 ms 
   /*
-    if(temps1-tempsMesure>=5000){ //Méthode qui fait le calcul de la vitesse du vent et la hauteur des précipitations sur 5 secondes (Vrai anémomètre et pluviomètre)
+    //Méthode qui fait le calcul de la vitesse du vent et la hauteur des précipitations sur 5 secondes (Vrai anémomètre et pluviomètre)
+    if(temps1-tempsMesure>=5000){ 
       tempsMesure=millis();
       pluie=nbPluv*valBascule;
       vent=(2*Pi*RBras*nbTourAnemo*3.6)/5;
@@ -59,11 +64,13 @@ void loop() {
       nbTourAnemo=0;
     }
   */
+  agir();         //Appel de la méthode qui affiche les informations sur l'écran
   if(verif)       //Si le bouton de maintient n'est pas appuyé, alors on change les informations sur l'écran
     if(etat==3)
       etat=1;
     else
       etat+=1;
+      
   temps2=0;  
 }
 
